@@ -15,7 +15,7 @@ environment variables, and ASSIST handles the shared deployment
 own repository and depends on `eticas-audit` as a normal pip dependency —
 exactly how a third party would consume it. The library keeps its own
 release cycle (PyPI/Zenodo/CITATION); the wrapper is the DataPACT
-deliverable and can be pushed (or pointed to, `AILegalAssistant`-style)
+deliverable and can be pushed or pointed to
 from the `github.com/DATAPACT` org without dragging the library along.
 
 **D2 — Asynchronous execution, filesystem job store, no database.**
@@ -33,7 +33,7 @@ arbitrary code execution — unacceptable on a shared consortium service.
 
 **D4 — Auth decoupled behind `AUTH_ENABLED`.** Offline JWT validation
 against the realm JWKS (cached; no per-request Keycloak call). Signature,
-`exp`, `iss` and `aud` are verified. Repointing to the DataPACT Keycloak
+`exp`, `iss` and `aud` are verified. Repointing to another Keycloak server
 is a pure env-var change. Fine-grained role authorisation is out of scope
 for now; the hook is in `app/auth.py::require_auth`.
 
