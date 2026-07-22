@@ -27,6 +27,25 @@ async def upload_dataset(
     storage: DatasetStorage = Depends(get_dataset_storage),
     _claims: dict = Depends(require_auth),
 ) -> DatasetInfo:
+    """Upload a dataset (CSV or Parquet) and get a `dataset_id` to
+    reference in audit requests.
+
+    **Trying it out?** Download one of ITACA's example datasets and
+    upload it here — their column names match the examples in
+    `POST /audits`:
+
+    - [example_training_binary_2.csv](https://raw.githubusercontent.com/Eticas-AI/itaca/main/files/example_training_binary_2.csv)
+      — for **labeled** audits (and the *dev* side of **drift**)
+    - [example_operational_binary_2.csv](https://raw.githubusercontent.com/Eticas-AI/itaca/main/files/example_operational_binary_2.csv)
+      — for **production** audits (and the *prod* side of **drift**)
+    - [example_impact_binary_2.csv](https://raw.githubusercontent.com/Eticas-AI/itaca/main/files/example_impact_binary_2.csv)
+      — for **impacted** audits
+
+    The response echoes the detected columns, so you can verify the
+    dataset before launching an audit. Note: `.pkl` files are rejected
+    by design (unpickling uploads is a code-execution risk); convert to
+    CSV or Parquet first.
+    """
     settings = get_settings()
     max_bytes = settings.max_upload_mb * 1024 * 1024
     content = await file.read()
