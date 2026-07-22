@@ -1,0 +1,42 @@
+{
+  "realm": "datapact-dev",
+  "enabled": true,
+  "sslRequired": "none",
+  "clients": [
+    {
+      "clientId": "itaca-api",
+      "name": "ITACA API (resource server)",
+      "enabled": true,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "secret": "dev-only-secret-itaca-api",
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "itaca-test-client",
+      "name": "Test client for obtaining tokens (dev only)",
+      "enabled": true,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "secret": "dev-only-secret-test-client",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "itaca-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "itaca-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ]
+}

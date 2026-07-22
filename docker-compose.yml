@@ -1,0 +1,49 @@
+# ITACA API — compose setup
+#
+# Two usage modes:
+#
+#   1. Full local dev environment (API + local Keycloak with the
+#      `datapact-dev` realm pre-imported):
+#
+#        cp example.env .env
+#        docker compose --profile dev up --build
+#
+#   2. Deployment (ASSIST): only the `api` service is relevant. Point
+#      KEYCLOAK_SERVER_URL / KEYCLOAK_REALM / KEYCLOAK_CLIENT_ID at the
+#      DataPACT shared Keycloak via the .env file — no code or image
+#      changes required. This compose file itself may be replaced by
+#      ASSIST's own orchestration; the only contract is example.env.
+
+services:
+  api:
+    build: .
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      DATA_DIR: /data/datasets
+      RESULTS_DIR: /data/results
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-200}
+      AUTH_ENABLED: ${AUTH_ENABLED:-true}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL:-http://keycloak:8080}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-datapact-dev}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-itaca-api}
+    volumes:
+      - itaca-data:/data
+    restart: unless-stopped
+
+  keycloak:
+    profiles: ["dev"]
+    image: quay.io/keycloak/keycloak:26.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+
+volumes:
+  itaca-data:
