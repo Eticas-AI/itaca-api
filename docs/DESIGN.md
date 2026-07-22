@@ -83,30 +83,3 @@ operators. Groups: API (host/port/log/CORS), Storage (dirs, upload
 limit), Auth (`AUTH_ENABLED` + the three Keycloak variables ASSIST
 repoints + `KEYCLOAK_VERIFY_AUD`). Configuration is loaded via a single
 `pydantic-settings` class (`app/config.py`); nothing is hardcoded.
-
-## Implementation plan (as executed)
-
-1. **Scaffold** — pyproject, `Settings`, app factory, `/health` + `/info`.
-2. **Datasets** — storage service + upload/list/get/delete with format
-   and size validation at upload time.
-3. **Audits** — discriminated schemas, `AuditRunner` (4 types),
-   BackgroundTasks, result persistence, endpoints. E2E-tested with a
-   synthetic biased binary-classifier dataset.
-4. **Keycloak** — JWKS auth dependency, dev realm export, auth tests
-   with locally generated RSA keys (no live Keycloak needed in CI).
-5. **Docker** — Dockerfile + compose with dev profile.
-6. **Delivery docs** — README with ASSIST deployment notes, curl
-   walkthrough, OpenAPI at `/docs`.
-
-## External follow-ups (outside this repo)
-
-- Request **write access** to `github.com/DATAPACT` (currently
-  read-only) before pushing/pointing the deliverable there.
-- Confirm with ASSIST (Dumitru Cenusa) whether the DATAPACT org expects
-  full source or a documentation/pointer repo (the `AILegalAssistant`
-  precedent suggests pointer repos are acceptable).
-- ~~`eticas-audit` 0.1.7 (PyPI) vs 0.1.8 (repo)~~ **Resolved
-  (2026-07-22):** the full `v0.1.7 → v0.1.8` diff touches only citation
-  metadata (`.zenodo.json`, `CITATION.cff`, README, notebook) — zero
-  code changes. The PyPI range pin `>=0.1.7,<0.2` stands; future
-  functional releases published to PyPI will be picked up by the range.
