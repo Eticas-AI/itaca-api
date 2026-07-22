@@ -46,17 +46,17 @@ the only contract is `example.env`.
 
 ```
 ┌─────────────┐   Bearer JWT    ┌──────────────────────────┐
-│   Client     │ ──────────────▶ │  itaca-api (FastAPI)      │
-│ (AssessR /   │                 │  ├─ auth (OIDC/JWKS)      │
-│  ASSIST)     │ ◀────────────── │  ├─ routers: meta,        │
-└─────────────┘   JSON results  │  │   datasets, audits      │
-                                 │  ├─ services: AuditRunner  │
-       ▲ token                   │  │   (BackgroundTasks)     │
-       │                         │  └─ storage: DATA_DIR,     │
-┌─────────────┐                 │      RESULTS_DIR (fs)      │
-│  Keycloak    │ ◀── JWKS fetch ─┤                            │
-│ (local dev / │                 │  depends on:               │
-│  DataPACT)   │                 │  eticas-audit (pip)        │
+│   Client    │ ──────────────▶ │  itaca-api (FastAPI)     │
+│ (AssessR /  │                 │  ├─ auth (OIDC/JWKS)     │
+│  ASSIST)    │ ◀────────────── │  ├─ routers: meta,       │
+└─────────────┘   JSON results  │  │   datasets, audits    │
+                                │  ├─ services: AuditRunner│
+       ▲ token                  │  │   (BackgroundTasks)   │
+       │                        │  └─ storage: DATA_DIR,   │
+┌─────────────┐                 │      RESULTS_DIR (fs)    │
+│  Keycloak   │ ◀── JWKS fetch ─┤                          │
+│ (local dev /│                 │  depends on:             │
+│  DataPACT)  │                 │  eticas-audit (pip)      │
 └─────────────┘                 └──────────────────────────┘
 ```
 
