@@ -1,3 +1,6 @@
 [flake8]
 max-line-length = 100
 exclude = .venv,build,dist
+# Markdown links to example datasets in endpoint docstrings cannot be wrapped
+per-file-ignores =
+    app/routers/datasets.py: E501
