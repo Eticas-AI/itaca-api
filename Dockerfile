@@ -1,9 +1,9 @@
 # ITACA API — deployment image
 #
-# Minimal by design: ASSIST (DataPACT integration partner) may adapt or
-# replace this Dockerfile for the shared deployment. All runtime
-# configuration is environment-variable driven (see example.env); nothing
-# in the image needs rebuilding to repoint Keycloak or storage paths.
+# Minimal by design: deployment operators may adapt or replace this
+# Dockerfile for their environment. All runtime configuration is
+# environment-variable driven (see example.env); nothing in the image
+# needs rebuilding to repoint Keycloak or storage paths.
 
 FROM python:3.12-slim
 

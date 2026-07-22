@@ -8,11 +8,11 @@
 #        cp example.env .env
 #        docker compose --profile dev up --build
 #
-#   2. Deployment (ASSIST): only the `api` service is relevant. Point
-#      KEYCLOAK_SERVER_URL / KEYCLOAK_REALM / KEYCLOAK_CLIENT_ID at the
-#      DataPACT shared Keycloak via the .env file — no code or image
-#      changes required. This compose file itself may be replaced by
-#      ASSIST's own orchestration; the only contract is example.env.
+#   2. Deployment: only the `api` service is relevant. Point
+#      KEYCLOAK_SERVER_URL / KEYCLOAK_REALM / KEYCLOAK_CLIENT_ID at your
+#      Keycloak instance via the .env file — no code or image changes
+#      required. This compose file itself may be replaced by your own
+#      orchestration; the only contract is example.env.
 
 services:
   api:

@@ -121,16 +121,17 @@ semantics of `sensitive_attributes`, audit modes, and metrics.
 | GET | `/audits/{id}/results` | yes | Results (`?normalized=true\|false`) |
 | DELETE | `/audits/{id}` | yes | Delete audit + results |
 
-## For ASSIST: deployment notes
+## Deployment notes
 
 The integration contract is **`example.env` and nothing else** — no code
-or image changes should be needed to deploy this service in the DataPACT
-shared environment.
+or image changes should be needed to deploy this service in any
+environment. (In the DataPACT shared deployment, this configuration is
+managed by the consortium's integration partner.)
 
 **What to change:**
 
 - `KEYCLOAK_SERVER_URL`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID` — point
-  at the DataPACT shared Keycloak. Token validation is offline against
+  at your Keycloak instance. Token validation is offline against
   the realm JWKS (signature, `exp`, `iss`, `aud`); the API only needs
   network access to the JWKS endpoint
   (`{server}/realms/{realm}/protocol/openid-connect/certs`).
@@ -149,7 +150,7 @@ interface.
 **Notes:**
 
 - `/health` is unauthenticated by design, for liveness probes.
-- If the DataPACT Keycloak does not stamp the API's client id into token
+- If your Keycloak does not stamp the API's client id into token
   audiences, set `KEYCLOAK_VERIFY_AUD=false` (issuer and signature are
   still verified).
 - Pickle datasets are **deliberately rejected** at the API boundary
