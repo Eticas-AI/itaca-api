@@ -173,3 +173,9 @@ def test_results_conflict_when_not_completed(
     )
     audit_id = r.json()["audit_id"]
     assert client.get(f"/audits/{audit_id}/results").status_code == 409
+
+
+def test_root_redirects_to_docs(client):
+    r = client.get("/", follow_redirects=False)
+    assert r.status_code == 307
+    assert r.headers["location"] == "/docs"

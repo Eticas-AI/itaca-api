@@ -3,6 +3,7 @@
 from importlib.metadata import PackageNotFoundError, version as pkg_version
 
 from fastapi import APIRouter, Depends
+from fastapi.responses import RedirectResponse
 
 from ..auth import require_auth
 from ..config import get_settings
@@ -10,6 +11,12 @@ from ..schemas import InfoResponse
 from ..version import __version__
 
 router = APIRouter(tags=["meta"])
+
+
+@router.get("/", include_in_schema=False)
+def root() -> RedirectResponse:
+    """Convenience redirect: the interactive API docs live at /docs."""
+    return RedirectResponse(url="/docs")
 
 
 @router.get("/health")
