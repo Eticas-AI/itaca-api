@@ -176,4 +176,4 @@ auth decoupling), and the implementation plan this repo followed.
 
 ## License
 
-Apache 2.0 — same as ITACA.
+Apache 2.0.
