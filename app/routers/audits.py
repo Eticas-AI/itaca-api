@@ -12,7 +12,7 @@ fragile. ``BackgroundTasks`` is sufficient for the expected volume; if a
 real queue is ever needed, the HTTP contract stays the same.
 """
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Body, Depends, HTTPException, status
 
 from ..auth import require_auth
 from ..schemas import AuditCreated, AuditRecord, AuditRequest
@@ -24,6 +24,95 @@ from ..services.audit_runner import (
 from ..services.storage import AuditStorage, DatasetStorage
 
 router = APIRouter(prefix="/audits", tags=["audits"])
+
+# Example model configuration mirroring the ITACA library's example.ipynb
+# (and examples/model_config.json). Exercises simple attributes with
+# underprivileged values, simple with privileged values, and a complex
+# (intersectional) attribute.
+_EXAMPLE_MODEL = {
+    "model_name": "ML Testing Regression",
+    "description": "A logistic regression model to illustrate audits",
+    "country": "USA",
+    "state": "CA",
+    "features": ["feature_0", "feature_1", "feature_2"],
+    "sensitive_attributes": {
+        "sex": {"columns": [{"name": "sex", "underprivileged": [2]}],
+                "type": "simple"},
+        "ethnicity": {"columns": [{"name": "ethnicity", "privileged": [1]}],
+                      "type": "simple"},
+        "age": {"columns": [{"name": "age", "privileged": [3, 4]}],
+                "type": "simple"},
+        "sex_ethnicity": {"groups": ["sex", "ethnicity"], "type": "complex"},
+    },
+}
+
+# Named examples rendered as a dropdown in Swagger UI. Column names match
+# the ITACA example datasets (examples/ shows how to obtain and upload
+# them); replace the ds_… placeholders with real ids from POST /datasets.
+_AUDIT_EXAMPLES = {
+    "labeled": {
+        "summary": "Labeled audit (training data with ground truth)",
+        "description": "Requires a dataset with both the true label and "
+                       "the model prediction. Column names match ITACA's "
+                       "example_training_binary_2.csv.",
+        "value": {
+            "model": _EXAMPLE_MODEL,
+            "params": {
+                "audit_type": "labeled",
+                "dataset_id": "ds_REPLACE_ME",
+                "label_column": "outcome",
+                "output_column": "predicted_outcome",
+                "positive_output": [1],
+            },
+        },
+    },
+    "production": {
+        "summary": "Production audit (predictions only)",
+        "description": "Unlabeled data from a running system. Column names "
+                       "match ITACA's example_operational_binary_2.csv.",
+        "value": {
+            "model": _EXAMPLE_MODEL,
+            "params": {
+                "audit_type": "production",
+                "dataset_id": "ds_REPLACE_ME",
+                "output_column": "predicted_outcome",
+                "positive_output": [1],
+            },
+        },
+    },
+    "impacted": {
+        "summary": "Impacted audit (recorded real-world outcomes)",
+        "description": "Recorded outcomes after decisions were applied. "
+                       "Column names match ITACA's "
+                       "example_impact_binary_2.csv.",
+        "value": {
+            "model": _EXAMPLE_MODEL,
+            "params": {
+                "audit_type": "impacted",
+                "dataset_id": "ds_REPLACE_ME",
+                "output_column": "recorded_outcome",
+                "positive_output": [1],
+            },
+        },
+    },
+    "drift": {
+        "summary": "Drift audit (development vs production)",
+        "description": "Compares two datasets to detect distribution and "
+                       "behaviour drift; references two dataset ids.",
+        "value": {
+            "model": _EXAMPLE_MODEL,
+            "params": {
+                "audit_type": "drift",
+                "dataset_id_dev": "ds_REPLACE_ME_DEV",
+                "output_column_dev": "predicted_outcome",
+                "positive_output_dev": [1],
+                "dataset_id_prod": "ds_REPLACE_ME_PROD",
+                "output_column_prod": "predicted_outcome",
+                "positive_output_prod": [1],
+            },
+        },
+    },
+}
 
 
 def get_audit_storage() -> AuditStorage:
@@ -37,8 +126,8 @@ def get_dataset_storage() -> DatasetStorage:
 @router.post("", response_model=AuditCreated,
              status_code=status.HTTP_202_ACCEPTED)
 def create_audit(
-    request: AuditRequest,
     background: BackgroundTasks,
+    request: AuditRequest = Body(openapi_examples=_AUDIT_EXAMPLES),
     audits: AuditStorage = Depends(get_audit_storage),
     datasets: DatasetStorage = Depends(get_dataset_storage),
     _claims: dict = Depends(require_auth),
