@@ -1,0 +1,25 @@
+{
+  "model_name": "ML Testing Regression",
+  "description": "A logistic regression model to illustrate audits (mirrors ITACA's example.ipynb)",
+  "country": "USA",
+  "state": "CA",
+  "features": ["feature_0", "feature_1", "feature_2"],
+  "sensitive_attributes": {
+    "sex": {
+      "columns": [{ "name": "sex", "underprivileged": [2] }],
+      "type": "simple"
+    },
+    "ethnicity": {
+      "columns": [{ "name": "ethnicity", "privileged": [1] }],
+      "type": "simple"
+    },
+    "age": {
+      "columns": [{ "name": "age", "privileged": [3, 4] }],
+      "type": "simple"
+    },
+    "sex_ethnicity": {
+      "groups": ["sex", "ethnicity"],
+      "type": "complex"
+    }
+  }
+}

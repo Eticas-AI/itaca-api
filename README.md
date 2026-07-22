@@ -105,6 +105,17 @@ library surface (`MLModel` constructor and `run_*_audit` methods) — see
 the [ITACA documentation](https://github.com/Eticas-AI/itaca) for the
 semantics of `sensitive_attributes`, audit modes, and metrics.
 
+## Examples
+
+[`examples/`](examples/) contains a runnable end-to-end client
+([`run_examples.py`](examples/run_examples.py)) that reproduces the
+ITACA library's own
+[`example.ipynb`](https://github.com/Eticas-AI/itaca/blob/main/example.ipynb)
+through the API: it downloads the example datasets from the ITACA
+repository, uploads them, runs all four audit types and prints the
+normalized fairness scores. See [`examples/README.md`](examples/README.md)
+for the notebook → API mapping.
+
 ### Endpoints
 
 | Method | Path | Auth | Description |

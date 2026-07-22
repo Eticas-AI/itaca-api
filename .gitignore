@@ -7,3 +7,4 @@ data/
 .pytest_cache/
 dist/
 build/
+examples/data/
