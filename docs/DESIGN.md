@@ -105,7 +105,8 @@ repoints + `KEYCLOAK_VERIFY_AUD`). Configuration is loaded via a single
 - Confirm with ASSIST (Dumitru Cenusa) whether the DATAPACT org expects
   full source or a documentation/pointer repo (the `AILegalAssistant`
   precedent suggests pointer repos are acceptable).
-- `eticas-audit` is pinned `>=0.1.7,<0.2`: PyPI's latest release is
-  0.1.7 while the library repo's `main` is at 0.1.8 (API surface
-  verified identical for everything this wrapper uses). Release 0.1.8
-  to PyPI or keep the range pin.
+- ~~`eticas-audit` 0.1.7 (PyPI) vs 0.1.8 (repo)~~ **Resolved
+  (2026-07-22):** the full `v0.1.7 → v0.1.8` diff touches only citation
+  metadata (`.zenodo.json`, `CITATION.cff`, README, notebook) — zero
+  code changes. The PyPI range pin `>=0.1.7,<0.2` stands; future
+  functional releases published to PyPI will be picked up by the range.
