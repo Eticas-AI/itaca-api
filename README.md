@@ -134,10 +134,9 @@ for the notebook → API mapping.
 
 ## Deployment notes
 
-The integration contract is **`example.env` and nothing else** — no code
+The integration contract is **`example.env`** - no other code
 or image changes should be needed to deploy this service in any
-environment. (In the DataPACT shared deployment, this configuration is
-managed by the consortium's integration partner.)
+environment.
 
 **What to change:**
 
