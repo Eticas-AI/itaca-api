@@ -29,6 +29,10 @@ services:
       KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL:-http://keycloak:8080}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-datapact-dev}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-itaca-api}
+      # `${VAR-default}` (no colon): apply the dev default only when unset.
+      # An explicitly empty value in .env (deployment: derive issuer from
+      # the server URL) is preserved and treated as None by the app.
+      KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL-http://localhost:8081/realms/datapact-dev}
     volumes:
       - itaca-data:/data
     restart: unless-stopped

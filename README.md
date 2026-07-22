@@ -145,6 +145,13 @@ environment.
   the realm JWKS (signature, `exp`, `iss`, `aud`); the API only needs
   network access to the JWKS endpoint
   (`{server}/realms/{realm}/protocol/openid-connect/certs`).
+- `KEYCLOAK_ISSUER_URL` — only needed for **split-horizon** setups, where
+  the public URL that stamps the token `iss` differs from the internal URL
+  the API uses to reach Keycloak (e.g. a shared deployment behind an
+  ingress: tokens issued at `https://auth.example.org/...` while the API
+  fetches JWKS at `http://keycloak:8080/...`). Set it to the public issuer;
+  leave it empty to derive the issuer from `KEYCLOAK_SERVER_URL` (the
+  single-hostname case). JWKS is always fetched from `KEYCLOAK_SERVER_URL`.
 - `CORS_ORIGINS` — restrict to the actual consuming origins.
 - `MAX_UPLOAD_MB` — align with your ingress body-size limit.
 

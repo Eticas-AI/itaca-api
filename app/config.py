@@ -9,7 +9,9 @@ variables — see ``example.env`` at the repo root for the full contract.
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -35,6 +37,18 @@ class Settings(BaseSettings):
     keycloak_realm: str = "datapact-dev"
     keycloak_client_id: str = "itaca-api"
     keycloak_verify_aud: bool = True
+    # Expected token issuer, when it differs from the URL the API uses to
+    # reach Keycloak (split-horizon: e.g. tokens issued at a public URL
+    # while the API fetches JWKS over an internal network). Empty/unset →
+    # derived from keycloak_server_url.
+    keycloak_issuer_url: Optional[str] = None
+
+    @field_validator("keycloak_issuer_url", mode="before")
+    @classmethod
+    def _empty_string_as_none(cls, v):
+        # compose can inject "" for an unset override; treat it as None so
+        # the issuer falls back to keycloak_server_url.
+        return v or None
 
     @property
     def cors_origins_list(self) -> list[str]:
@@ -42,11 +56,19 @@ class Settings(BaseSettings):
 
     @property
     def keycloak_issuer(self) -> str:
+        # Explicit override wins (split-horizon: public issuer ≠ internal
+        # fetch URL); otherwise derive from the server URL as before.
+        if self.keycloak_issuer_url:
+            return self.keycloak_issuer_url.rstrip("/")
         return f"{self.keycloak_server_url.rstrip('/')}/realms/{self.keycloak_realm}"
 
     @property
     def keycloak_jwks_url(self) -> str:
-        return f"{self.keycloak_issuer}/protocol/openid-connect/certs"
+        # Always derived from the URL the API actually uses to reach
+        # Keycloak — never from the (possibly public) issuer, which the API
+        # may not be able to resolve on the internal network.
+        base = self.keycloak_server_url.rstrip("/")
+        return f"{base}/realms/{self.keycloak_realm}/protocol/openid-connect/certs"
 
 
 @lru_cache
