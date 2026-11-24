@@ -10,6 +10,26 @@ The API exposes ITACA's four audit types — **labeled**, **production**,
 **impacted** and **drift** — over HTTP, with dataset upload, asynchronous
 audit execution, and Keycloak (OIDC) authentication.
 
+## ITACA library version
+
+The API depends on ITACA 0.1.10, installed from the
+[GitHub release](https://github.com/Eticas-AI/itaca/releases/tag/v0.1.10).
+The `eticas-audit` project on PyPI is still at 0.1.7, which predates the
+corrections to the fairness and drift metrics. `GET /info` reports the
+library version installed.
+
+With 0.1.10, results differ from earlier versions:
+
+- The predictive-value metrics (`d_calibrated_*`) and drift give different
+  values; audits run with earlier versions should be re-run.
+- A metric that cannot be computed for a group is returned with empty
+  values (`null`), the level `Not computable` and a `note`.
+- In drift results, `accuracy` is the balanced accuracy of the classifier
+  that separates development from production rows, and `proportion` its
+  chance level, 0.5.
+
+See the [release notes](https://github.com/Eticas-AI/itaca/releases/tag/v0.1.10).
+
 ## Quickstart (local, no auth)
 
 ```bash

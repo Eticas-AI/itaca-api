@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "itaca-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "REST API wrapper for ITACA (AI fairness auditing) with Keycloak integration — DataPACT/ASSIST deployment artifact"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Eticas AI", email = "info@eticas.ai" }]
 license = { text = "Apache-2.0" }
 dependencies = [
-    "eticas-audit>=0.1.7,<0.2",
+    # From the GitHub release: the PyPI project is still at 0.1.7.
+    "eticas-audit @ https://github.com/Eticas-AI/itaca/archive/refs/tags/v0.1.10.tar.gz",
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
     "pydantic>=2.6",

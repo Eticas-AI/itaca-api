@@ -13,7 +13,8 @@ environment variables, and ASSIST handles the shared deployment
 
 **D1 — Separate repo from the ITACA library.** The wrapper lives in its
 own repository and depends on `eticas-audit` as a normal pip dependency —
-exactly how a third party would consume it. The library keeps its own
+exactly how a third party would consume it. (Since v0.1.1 it is installed
+from the library's GitHub release archive, as the PyPI project is behind.) The library keeps its own
 release cycle (PyPI/Zenodo/CITATION); the wrapper is the DataPACT
 deliverable and can be pushed or pointed to
 from the `github.com/DATAPACT` org without dragging the library along.
